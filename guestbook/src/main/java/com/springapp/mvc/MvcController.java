@@ -14,7 +14,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/")
 public class MvcController {
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value="/hello", method = RequestMethod.GET)
     public String sayHi(Model model) {
         System.out.println("********");
         return "helloworld";
