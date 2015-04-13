@@ -28,7 +28,7 @@ public class SponsorDAOImpl implements SponsorDAO{
 	public Sponsor insert(final Sponsor sponsor) {
 		final String sql = "INSERT IGNORE INTO sponsor " +
 				"(name, description, street, city, state, zip) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "VALUES (?, ?, ?, ?, ?, ?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		int row = 0;
 		try {
@@ -77,20 +77,18 @@ public class SponsorDAOImpl implements SponsorDAO{
 
 	@Override
 	public Sponsor update(Sponsor sponsor) {
-		Sponsor currentSponsor = findByID(sponsor.getId());
-		if(currentSponsor.getId() == 0) {
-			return currentSponsor;
-		}
-		else {
-			try {
-				String sql = "UPDATE player SET name = ?, description = ?, street = ?, city = ?, state = ?, zip = ?, WHERE id = ?";
-				jdbcTemplate.update(sql, new Object[]{sponsor.getName(), sponsor.getDescription(),sponsor.getAddress().getStreet(),
-						sponsor.getAddress().getCity(), sponsor.getAddress().getState(),
-						sponsor.getAddress().getZip()});
-				sponsor = findByID(sponsor.getId());
-			}catch(Exception e){}
-		}
-		return sponsor;
+		Sponsor updatedSponsor = new Sponsor();
+	
+		try {
+			String sql = "UPDATE sponsor SET name = ?, description = ?, street = ?, city = ?, state = ?, zip = ? WHERE id = ?";
+			jdbcTemplate.update(sql, new Object[]{sponsor.getName(), sponsor.getDescription(),sponsor.getAddress().getStreet(),
+					sponsor.getAddress().getCity(), sponsor.getAddress().getState(),
+					sponsor.getAddress().getZip(), sponsor.getId()});
+			updatedSponsor = findByID(sponsor.getId());
+		} catch(Exception e){}
+		
+		
+		return updatedSponsor;
 	}
 
 }

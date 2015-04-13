@@ -101,6 +101,7 @@ public class PlayerDAOImpl implements PlayerDAO{
 
 	@Override
 	public Player update(Player player) {
+		Player updatedPlayer = new Player();
 		if(player.getSponsorID() != 0) {
 			Sponsor sponsor = sponsorDAO.findByID(player.getSponsorID());
 			if(sponsor.getId() == 0) return new Player();
@@ -112,15 +113,15 @@ public class PlayerDAOImpl implements PlayerDAO{
 						player.getEmail(), player.getDescription(), player.getAddress().getStreet(),
 						player.getAddress().getCity(), player.getAddress().getState(),
 						player.getAddress().getZip(), player.getSponsorID(), player.getId()});
-				player = findByID(player.getId());
+				updatedPlayer = findByID(player.getId());
 			}catch(Exception e){}
 		}
-		return player;
+		return updatedPlayer;
 	}
 
 	@Override
 	public int findBySponsor(long id) {
-		String sql = "SELECT * FROM opponents WHERE sponsorID  = ?";
+		String sql = "SELECT * FROM player WHERE sponsorID  = ?";
 		int count = 0;
 		try {
 			List<Map<String,Object>> res =jdbcTemplate.queryForList(sql, new Object[]{ id });

@@ -1,8 +1,8 @@
 package edu.sjsu.cmpe275.lab3;
 
 public class Opponents {
-	Integer play1;
-	Integer play2;
+	int play1;
+	int play2;
 	public Integer getPlay1() {
 		return play1;
 	}

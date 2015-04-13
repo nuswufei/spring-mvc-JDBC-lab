@@ -37,7 +37,7 @@ public class OpponentsDAOImpl implements OpponentsDAO{
 		if(p1.getId() == 0 || p2.getId() == 0) return -1;
 		if(!findbyID(id1, id2)){
 			String sql = "INSERT IGNORE INTO opponents " +
-					"((firstplayerID, secondplayerID) "
+					"(firstplayerID, secondplayerID) "
 					+ "VALUES (?, ?)";
 			try {
 				jdbcTemplate.update(sql, new Object[]{id1, id2});

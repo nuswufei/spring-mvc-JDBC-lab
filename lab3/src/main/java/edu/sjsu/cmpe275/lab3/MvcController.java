@@ -7,18 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
-
-
-
-
-
-
-
 
 
 
@@ -136,7 +130,6 @@ public class MvcController {
     		@RequestParam(value = "city", required = false) String city) {
     	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
     	PlayerDAOImpl playerDAO = (PlayerDAOImpl) context.getBean("playerDAO");
-    	Player player = new Player();
     	HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);
 	    Player currentPlayer = new Player();
@@ -148,7 +141,10 @@ public class MvcController {
             temp += user;
             return new ResponseEntity<String>(temp, headers, HttpStatus.NOT_FOUND);
     	}
+    	
+    	Player player = new Player();
     	Address playerAddress = new Address();
+    	player.setId(user);
     	try {player.setFirstname(first);} catch(Exception e){}
     	try {player.setLastname(last);} catch(Exception e){}
     	try {player.setEmail(email);} catch(Exception e){}
@@ -178,6 +174,7 @@ public class MvcController {
     	}
     	return new ResponseEntity<String>("Unkown Error happened in Server", headers, HttpStatus.BAD_REQUEST);
     }
+	
 	
 	@ResponseBody
     @RequestMapping(value = "player/{user}", method = RequestMethod.DELETE)
@@ -296,7 +293,6 @@ public class MvcController {
     		@RequestParam(value = "city", required = false) String city) {
     	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
     	SponsorDAOImpl sponsorDAO = (SponsorDAOImpl) context.getBean("sponsorDAO");
-    	Sponsor sponsor = new Sponsor();
     	HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);
 	    
@@ -309,6 +305,9 @@ public class MvcController {
             temp += id;
             return new ResponseEntity<String>(temp, headers, HttpStatus.NOT_FOUND);
     	}
+    	
+    	Sponsor sponsor = new Sponsor();
+    	sponsor.setId(id);
     	Address sponsorAddress = new Address();
     	try {sponsor.setName(name);} catch(Exception e){}
     	try {sponsor.setDescription(des);} catch(Exception e){}
@@ -363,6 +362,7 @@ public class MvcController {
             return new ResponseEntity<String>(temp, headers, HttpStatus.BAD_REQUEST);
 	    }
 	    try {
+	    	sponsorDAO.deleteByID(sponsor.getId());
             ObjectMapper objMapper = new ObjectMapper();
             String jsonString = objMapper.writeValueAsString(sponsor);
             return new ResponseEntity<String>(jsonString, headers, HttpStatus.OK);
